@@ -26,10 +26,12 @@ const AdminOverview = ({ analytics, loading }) => {
         api.get('/admin/hall-owners?status=pending&limit=5'),
         api.get('/admin/service-providers?status=inactive&limit=5'),
       ]);
-      setPendingHalls(hallsRes.data.data || []);
-      setPendingServiceProviders(spRes.data.data || []);
+      setPendingHalls(Array.isArray(hallsRes.data?.data) ? hallsRes.data.data : []);
+      setPendingServiceProviders(Array.isArray(spRes.data?.data) ? spRes.data.data : []);
     } catch (error) {
       console.error('Failed to load pending items:', error);
+      setPendingHalls([]);
+      setPendingServiceProviders([]);
     }
   };
 
@@ -99,7 +101,7 @@ const AdminOverview = ({ analytics, loading }) => {
               View All
             </Link>
           </div>
-          {pendingHalls.length === 0 ? (
+          {!Array.isArray(pendingHalls) || pendingHalls.length === 0 ? (
             <p className="text-gray-500 text-center py-8">No pending approvals</p>
           ) : (
             <div className="space-y-3">
@@ -133,7 +135,7 @@ const AdminOverview = ({ analytics, loading }) => {
               View All
             </Link>
           </div>
-          {pendingServiceProviders.length === 0 ? (
+          {!Array.isArray(pendingServiceProviders) || pendingServiceProviders.length === 0 ? (
             <p className="text-gray-500 text-center py-8">No pending approvals</p>
           ) : (
             <div className="space-y-3">

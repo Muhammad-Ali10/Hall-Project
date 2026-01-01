@@ -1,34 +1,63 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 const HallsMap = ({ halls, userLocation, onHallClick }) => {
   const mapRef = useRef(null);
   const mapInstanceRef = useRef(null);
   const markersRef = useRef([]);
+  const [isApiLoaded, setIsApiLoaded] = useState(false);
+  const [apiError, setApiError] = useState(false);
 
   useEffect(() => {
-    if (!window.google) {
-      const script = document.createElement('script');
-      script.src = `https://maps.googleapis.com/maps/api/js?key=${import.meta.env.VITE_GOOGLE_MAPS_API_KEY}`;
-      script.async = true;
-      script.defer = true;
-      script.onload = initializeMap;
-      document.head.appendChild(script);
-    } else {
-      initializeMap();
+    const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
+    
+    // Don't load if no API key
+    if (!apiKey) {
+      console.warn('Google Maps API key is not configured');
+      setApiError(true);
+      return;
     }
 
+    // Check if Google Maps API is already loaded
+    if (window.google && window.google.maps) {
+      setIsApiLoaded(true);
+      initializeMap();
+      return;
+    }
+
+    // Load Google Maps script
+    const script = document.createElement('script');
+    script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}`;
+    script.async = true;
+    script.defer = true;
+    
+    script.onload = () => {
+      setIsApiLoaded(true);
+      initializeMap();
+    };
+    
+    script.onerror = () => {
+      console.error('Failed to load Google Maps API');
+      setApiError(true);
+    };
+    
+    document.head.appendChild(script);
+
     function initializeMap() {
-      if (!mapRef.current) return;
+      if (!mapRef.current || !window.google || !window.google.maps) return;
 
       // Determine map center
       let center = { lat: 28.6139, lng: 77.2090 }; // Default: New Delhi
       
-      if (userLocation && userLocation.lat && userLocation.lng) {
+      if (userLocation && typeof userLocation.lat === 'number' && typeof userLocation.lng === 'number' && 
+          !isNaN(userLocation.lat) && !isNaN(userLocation.lng)) {
         center = { lat: userLocation.lat, lng: userLocation.lng };
-      } else if (halls && halls.length > 0) {
+      } else if (Array.isArray(halls) && halls.length > 0) {
         // Use first hall's location as center
         const firstHall = halls.find(h => h.location?.coordinates);
-        if (firstHall && firstHall.location.coordinates) {
+        if (firstHall && Array.isArray(firstHall.location.coordinates) && 
+            firstHall.location.coordinates.length === 2 &&
+            typeof firstHall.location.coordinates[0] === 'number' &&
+            typeof firstHall.location.coordinates[1] === 'number') {
           center = {
             lat: firstHall.location.coordinates[1],
             lng: firstHall.location.coordinates[0],
@@ -37,28 +66,29 @@ const HallsMap = ({ halls, userLocation, onHallClick }) => {
       }
 
       // Initialize map
-      if (!mapInstanceRef.current) {
-        mapInstanceRef.current = new window.google.maps.Map(mapRef.current, {
-          center,
-          zoom: halls && halls.length > 0 ? 12 : 10,
-          styles: [
-            {
-              featureType: 'poi',
-              elementType: 'labels',
-              stylers: [{ visibility: 'off' }],
-            },
-          ],
-        });
-      } else {
-        mapInstanceRef.current.setCenter(center);
-      }
+      try {
+        if (!mapInstanceRef.current) {
+          mapInstanceRef.current = new window.google.maps.Map(mapRef.current, {
+            center,
+            zoom: Array.isArray(halls) && halls.length > 0 ? 12 : 10,
+            styles: [
+              {
+                featureType: 'poi',
+                elementType: 'labels',
+                stylers: [{ visibility: 'off' }],
+              },
+            ],
+          });
+        } else {
+          mapInstanceRef.current.setCenter(center);
+        }
 
-      // Clear existing markers
-      markersRef.current.forEach(marker => marker.setMap(null));
-      markersRef.current = [];
+        // Clear existing markers
+        markersRef.current.forEach(marker => marker.setMap(null));
+        markersRef.current = [];
 
-      // Add markers for each hall
-      if (halls && halls.length > 0) {
+        // Add markers for each hall
+        if (Array.isArray(halls) && halls.length > 0) {
         const bounds = new window.google.maps.LatLngBounds();
         let hasValidLocation = false;
 
@@ -131,19 +161,24 @@ const HallsMap = ({ halls, userLocation, onHallClick }) => {
           }
         }
 
-        // Add user location marker if available
-        if (userLocation && userLocation.lat && userLocation.lng) {
-          const userMarker = new window.google.maps.Marker({
-            position: userLocation,
-            map: mapInstanceRef.current,
-            title: 'Your Location',
-            icon: {
-              url: 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png',
-              scaledSize: new window.google.maps.Size(32, 32),
-            },
-          });
-          markersRef.current.push(userMarker);
+          // Add user location marker if available
+          if (userLocation && typeof userLocation.lat === 'number' && typeof userLocation.lng === 'number' &&
+              !isNaN(userLocation.lat) && !isNaN(userLocation.lng)) {
+            const userMarker = new window.google.maps.Marker({
+              position: userLocation,
+              map: mapInstanceRef.current,
+              title: 'Your Location',
+              icon: {
+                url: 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png',
+                scaledSize: new window.google.maps.Size(32, 32),
+              },
+            });
+            markersRef.current.push(userMarker);
+          }
         }
+      } catch (error) {
+        console.error('Error initializing HallsMap:', error);
+        setApiError(true);
       }
     }
 
@@ -152,6 +187,25 @@ const HallsMap = ({ halls, userLocation, onHallClick }) => {
       markersRef.current = [];
     };
   }, [halls, userLocation, onHallClick]);
+
+  if (apiError) {
+    return (
+      <div className="w-full h-full min-h-[400px] rounded-xl overflow-hidden flex items-center justify-center bg-gray-100">
+        <p className="text-gray-500 text-sm">Map unavailable</p>
+      </div>
+    );
+  }
+
+  if (!isApiLoaded) {
+    return (
+      <div className="w-full h-full min-h-[400px] rounded-xl overflow-hidden flex items-center justify-center bg-gray-100">
+        <div className="text-center">
+          <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-orange-600 mb-2"></div>
+          <p className="text-gray-500 text-sm">Loading map...</p>
+        </div>
+      </div>
+    );
+  }
 
   return <div ref={mapRef} className="w-full h-full min-h-[400px] rounded-xl overflow-hidden" />;
 };

@@ -261,7 +261,7 @@ const BookingModal = ({ isOpen, onClose, hallId }) => {
                   <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-orange-600"></div>
                   <p className="mt-2 text-gray-600">Loading available dates...</p>
                 </div>
-              ) : availableDates.length === 0 ? (
+              ) : !Array.isArray(availableDates) || availableDates.length === 0 ? (
                 <div className="text-center py-8 bg-gray-50 rounded-lg">
                   <p className="text-gray-600 mb-2">No dates available. Please select a date manually.</p>
                   <input
@@ -313,7 +313,7 @@ const BookingModal = ({ isOpen, onClose, hallId }) => {
                   })}
                 </div>
               )}
-              {!loadingDates && availableDates.length > 0 && formik.touched.eventDate && formik.errors.eventDate && (
+              {!loadingDates && Array.isArray(availableDates) && availableDates.length > 0 && formik.touched.eventDate && formik.errors.eventDate && (
                 <p className="text-red-500 text-sm mt-1">{formik.errors.eventDate}</p>
               )}
             </div>

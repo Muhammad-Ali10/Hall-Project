@@ -14,9 +14,10 @@ const ManageBookings = () => {
   const loadBookings = async () => {
     try {
       const response = await api.get('/bookings/hall/my');
-      setBookings(response.data.data || []);
+      setBookings(Array.isArray(response.data?.data) ? response.data.data : []);
     } catch (error) {
       toast.error('Failed to load bookings');
+      setBookings([]);
     } finally {
       setLoading(false);
     }
@@ -44,7 +45,7 @@ const ManageBookings = () => {
     <div className="space-y-6">
       <h1 className="text-3xl font-bold text-gray-900">Manage Bookings</h1>
 
-      {bookings.length === 0 ? (
+      {!Array.isArray(bookings) || bookings.length === 0 ? (
         <div className="bg-white rounded-xl shadow-md p-12 text-center">
           <p className="text-gray-500 text-lg">No bookings yet</p>
         </div>

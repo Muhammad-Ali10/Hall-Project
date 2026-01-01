@@ -1,0 +1,661 @@
+{
+  "info": {
+    "name": "Convention Hall Booking API",
+    "description": "Complete API collection for Convention Hall Booking Platform",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{authToken}}",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:5000/api/v1"
+    },
+    {
+      "key": "authToken",
+      "value": ""
+    }
+  ],
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Customer - Send OTP",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"phone\": \"9876543210\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/customer/send-otp",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "customer", "send-otp"]
+            }
+          }
+        },
+        {
+          "name": "Customer - Verify OTP",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"phone\": \"9876543210\",\n  \"otp\": \"123456\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/customer/verify-otp",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "customer", "verify-otp"]
+            }
+          }
+        },
+        {
+          "name": "Hall - Register",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"hall@example.com\",\n  \"password\": \"password123\",\n  \"hallName\": \"Grand Convention Hall\",\n  \"phone\": \"9876543210\",\n  \"ownerName\": \"John Doe\",\n  \"ownerPhone\": \"9876543211\",\n  \"address\": {\n    \"fullAddress\": \"123 Main St, City, State 123456\",\n    \"city\": \"Mumbai\",\n    \"state\": \"Maharashtra\",\n    \"pincode\": \"400001\"\n  },\n  \"privacyPolicyAccepted\": true\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/hall/register",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "hall", "register"]
+            }
+          }
+        },
+        {
+          "name": "Hall - Login",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"hall@example.com\",\n  \"password\": \"password123\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/hall/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "hall", "login"]
+            }
+          }
+        },
+        {
+          "name": "Service Provider - Register",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "email",
+                  "value": "provider@example.com",
+                  "type": "text"
+                },
+                {
+                  "key": "password",
+                  "value": "password123",
+                  "type": "text"
+                },
+                {
+                  "key": "businessName",
+                  "value": "Decor Plus",
+                  "type": "text"
+                },
+                {
+                  "key": "category",
+                  "value": "decoration",
+                  "type": "text"
+                },
+                {
+                  "key": "phone",
+                  "value": "9876543212",
+                  "type": "text"
+                },
+                {
+                  "key": "idProof",
+                  "type": "file",
+                  "src": []
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/service-provider/register",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "service-provider", "register"]
+            }
+          }
+        },
+        {
+          "name": "Service Provider - Login",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"provider@example.com\",\n  \"password\": \"password123\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/service-provider/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "service-provider", "login"]
+            }
+          }
+        },
+        {
+          "name": "Admin - Login",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@example.com\",\n  \"password\": \"admin123\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/admin/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "admin", "login"]
+            }
+          }
+        },
+        {
+          "name": "Get Current User",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/auth/me",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "me"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Halls",
+      "item": [
+        {
+          "name": "Get All Halls",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/halls?city=Mumbai&eventType=wedding&minPrice=10000&maxPrice=50000&page=1&limit=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["halls"],
+              "query": [
+                {
+                  "key": "city",
+                  "value": "Mumbai"
+                },
+                {
+                  "key": "eventType",
+                  "value": "wedding"
+                },
+                {
+                  "key": "minPrice",
+                  "value": "10000"
+                },
+                {
+                  "key": "maxPrice",
+                  "value": "50000"
+                },
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Hall by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/halls/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["halls", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "hall_id_here"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Hall Owner - Get My Hall",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/halls/my/hall",
+              "host": ["{{baseUrl}}"],
+              "path": ["halls", "my", "hall"]
+            }
+          }
+        },
+        {
+          "name": "Hall Owner - Update Hall",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Updated Hall Name\",\n  \"capacity\": 500,\n  \"price\": 50000\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/halls/my/hall",
+              "host": ["{{baseUrl}}"],
+              "path": ["halls", "my", "hall"]
+            }
+          }
+        },
+        {
+          "name": "Hall Owner - Upload Photos",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "photos",
+                  "type": "file",
+                  "src": []
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/halls/my/hall/photos",
+              "host": ["{{baseUrl}}"],
+              "path": ["halls", "my", "hall", "photos"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Bookings",
+      "item": [
+        {
+          "name": "Create Booking",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "hall",
+                  "value": "hall_id_here",
+                  "type": "text"
+                },
+                {
+                  "key": "eventDate",
+                  "value": "2024-12-25",
+                  "type": "text"
+                },
+                {
+                  "key": "eventType",
+                  "value": "wedding",
+                  "type": "text"
+                },
+                {
+                  "key": "attendeeDetails",
+                  "value": "{\"name\":\"John Doe\",\"phone\":\"9876543210\",\"email\":\"john@example.com\"}",
+                  "type": "text"
+                },
+                {
+                  "key": "idProof",
+                  "type": "file",
+                  "src": []
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/bookings",
+              "host": ["{{baseUrl}}"],
+              "path": ["bookings"]
+            }
+          }
+        },
+        {
+          "name": "Get My Bookings",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/bookings/my?page=1&limit=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["bookings", "my"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Booking by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/bookings/my/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["bookings", "my", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "booking_id_here"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Hall Owner - Get Hall Bookings",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/bookings/hall/my",
+              "host": ["{{baseUrl}}"],
+              "path": ["bookings", "hall", "my"]
+            }
+          }
+        },
+        {
+          "name": "Hall Owner - Approve/Reject Booking",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"action\": \"approve\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/bookings/hall/:bookingId/approval",
+              "host": ["{{baseUrl}}"],
+              "path": ["bookings", "hall", ":bookingId", "approval"],
+              "variable": [
+                {
+                  "key": "bookingId",
+                  "value": "booking_id_here"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Payments",
+      "item": [
+        {
+          "name": "Create Payment Order",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/payments/:bookingId/order",
+              "host": ["{{baseUrl}}"],
+              "path": ["payments", ":bookingId", "order"],
+              "variable": [
+                {
+                  "key": "bookingId",
+                  "value": "booking_id_here"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Verify Payment",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"razorpayOrderId\": \"order_id\",\n  \"razorpayPaymentId\": \"payment_id\",\n  \"razorpaySignature\": \"signature\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/payments/:bookingId/verify",
+              "host": ["{{baseUrl}}"],
+              "path": ["payments", ":bookingId", "verify"],
+              "variable": [
+                {
+                  "key": "bookingId",
+                  "value": "booking_id_here"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Payment Status",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/payments/:bookingId/status",
+              "host": ["{{baseUrl}}"],
+              "path": ["payments", ":bookingId", "status"],
+              "variable": [
+                {
+                  "key": "bookingId",
+                  "value": "booking_id_here"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Service Providers",
+      "item": [
+        {
+          "name": "Get All Service Providers",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/service-providers?category=decoration&city=Mumbai",
+              "host": ["{{baseUrl}}"],
+              "path": ["service-providers"],
+              "query": [
+                {
+                  "key": "category",
+                  "value": "decoration"
+                },
+                {
+                  "key": "city",
+                  "value": "Mumbai"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Service Providers by Category",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/service-providers/by-category?categories=decoration,catering",
+              "host": ["{{baseUrl}}"],
+              "path": ["service-providers", "by-category"],
+              "query": [
+                {
+                  "key": "categories",
+                  "value": "decoration,catering"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Service Provider - Get My Profile",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/service-providers/my/profile",
+              "host": ["{{baseUrl}}"],
+              "path": ["service-providers", "my", "profile"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Admin",
+      "item": [
+        {
+          "name": "Get Hall Owners",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/admin/hall-owners?status=pending",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "hall-owners"],
+              "query": [
+                {
+                  "key": "status",
+                  "value": "pending"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Approve/Reject Hall Owner",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"action\": \"approve\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/admin/hall-owners/:userId/approval",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "hall-owners", ":userId", "approval"],
+              "variable": [
+                {
+                  "key": "userId",
+                  "value": "user_id_here"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Analytics",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/admin/analytics",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "analytics"]
+            }
+          }
+        },
+        {
+          "name": "Get All Users",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/admin/users",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "users"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
+

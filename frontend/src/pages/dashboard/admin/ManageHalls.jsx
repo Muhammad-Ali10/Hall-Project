@@ -35,10 +35,11 @@ const ManageHalls = () => {
         ...(status !== 'all' && { status }),
       });
       const response = await api.get(`/admin/hall-owners?${queryParams}`);
-      setHalls(response.data.data || []);
-      setTotalPages(response.data.pagination?.totalPages || 1);
+      setHalls(Array.isArray(response.data?.data) ? response.data.data : []);
+      setTotalPages(response.data?.pagination?.totalPages || 1);
     } catch (error) {
       toast.error('Failed to load halls');
+      setHalls([]);
     } finally {
       setLoading(false);
     }
@@ -112,7 +113,7 @@ const ManageHalls = () => {
         <div className="flex items-center justify-center h-64">
           <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-orange-500"></div>
         </div>
-      ) : filteredHalls.length === 0 ? (
+      ) : !Array.isArray(filteredHalls) || filteredHalls.length === 0 ? (
         <div className="bg-white rounded-xl shadow-md p-12 text-center">
           <p className="text-gray-500 text-lg">No halls found</p>
         </div>

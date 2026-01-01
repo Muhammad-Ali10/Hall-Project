@@ -307,7 +307,7 @@ const HallsPage = () => {
             <div className="text-center py-12">
               <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-orange-600"></div>
             </div>
-          ) : halls.length === 0 ? (
+          ) : !Array.isArray(halls) || halls.length === 0 ? (
             <div className="text-center py-12 bg-white rounded-2xl shadow-md">
               <p className="text-gray-500 text-lg">No halls found matching your criteria</p>
               <button
@@ -332,10 +332,10 @@ const HallsPage = () => {
                     <div className="flex flex-col md:flex-row">
                       {/* Image Section - Left */}
                       <div className="md:w-80 lg:w-96 h-64 md:h-auto flex-shrink-0 relative group">
-                        {hall.photos && hall.photos.length > 0 ? (
+                        {Array.isArray(hall.photos) && hall.photos.length > 0 ? (
                           <>
                             <img
-                              src={hall.photos[0].url}
+                              src={hall.photos[0]?.url}
                               alt={hall.name}
                               className="w-full h-full object-cover transition-transform group-hover:scale-105"
                             />
@@ -392,7 +392,7 @@ const HallsPage = () => {
                           </div>
 
                           {/* Event Types */}
-                          {hall.eventTypes && hall.eventTypes.length > 0 && (
+                          {Array.isArray(hall.eventTypes) && hall.eventTypes.length > 0 && (
                             <div className="flex flex-wrap gap-2 mb-3">
                               {hall.eventTypes.slice(0, 3).map((type, idx) => (
                                 <span
@@ -464,7 +464,7 @@ const HallsPage = () => {
                           </div>
 
                           {/* More Amenities */}
-                          {hall.amenities && hall.amenities.length > 0 && (
+                          {Array.isArray(hall.amenities) && hall.amenities.length > 0 && (
                             <div className="mb-4">
                               <div className="text-xs text-gray-500 mb-2 font-semibold">Amenities</div>
                               <div className="flex flex-wrap gap-1.5">
@@ -488,7 +488,7 @@ const HallsPage = () => {
                           {/* Photo Count, Rating & Additional Info */}
                           <div className="flex items-center justify-between flex-wrap gap-3 text-xs text-gray-500 mb-2">
                             <div className="flex items-center gap-4">
-                              {hall.photos && hall.photos.length > 0 && (
+                              {Array.isArray(hall.photos) && hall.photos.length > 0 && (
                                 <div className="flex items-center bg-gray-50 px-2 py-1 rounded">
                                   <FiCalendar className="mr-1" size={12} />
                                   <span className="font-medium">{hall.photos.length} photo{hall.photos.length !== 1 ? 's' : ''}</span>

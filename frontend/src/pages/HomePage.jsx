@@ -59,7 +59,7 @@ const HomePage = () => {
             <div className="text-center py-12">
               <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-orange-600"></div>
             </div>
-          ) : topHalls.length === 0 ? (
+          ) : !Array.isArray(topHalls) || topHalls.length === 0 ? (
             <div className="text-center py-12 text-gray-500">No halls available</div>
           ) : (
             <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -69,10 +69,10 @@ const HomePage = () => {
                   to={`/halls/${hall._id}`}
                   className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
                 >
-                  {hall.photos && hall.photos.length > 0 ? (
+                  {Array.isArray(hall.photos) && hall.photos.length > 0 ? (
                     <div className="relative h-48 overflow-hidden">
                       <img
-                        src={hall.photos[0].url}
+                        src={hall.photos[0]?.url}
                         alt={hall.name}
                         className="w-full h-full object-cover"
                       />
@@ -204,7 +204,7 @@ const HomePage = () => {
       </section>
 
       {/* Service Providers Section */}
-      {serviceProviders.length > 0 && (
+      {Array.isArray(serviceProviders) && serviceProviders.length > 0 && (
         <section className="py-16 bg-white">
           <div className="max-w-7xl mx-auto px-4">
             <h2 className="text-3xl md:text-4xl font-bold text-center mb-12 text-gray-800">

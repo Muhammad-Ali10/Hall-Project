@@ -47,26 +47,32 @@ const hallSlice = createSlice({
       })
       .addCase(fetchHalls.fulfilled, (state, action) => {
         state.loading = false;
-        state.halls = action.payload.data;
-        state.pagination = action.payload.pagination;
+        state.halls = Array.isArray(action.payload?.data) ? action.payload.data : [];
+        state.pagination = action.payload?.pagination || null;
       })
       .addCase(fetchHalls.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message;
+        state.error = action.error?.message || 'Failed to fetch halls';
+        state.halls = [];
+        state.pagination = null;
       })
       .addCase(fetchHallById.pending, (state) => {
         state.loading = true;
       })
       .addCase(fetchHallById.fulfilled, (state, action) => {
         state.loading = false;
-        state.currentHall = action.payload.data;
+        state.currentHall = action.payload?.data || null;
       })
       .addCase(fetchHallById.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message;
+        state.error = action.error?.message || 'Failed to fetch hall';
+        state.currentHall = null;
       })
       .addCase(fetchTopHalls.fulfilled, (state, action) => {
-        state.topHalls = action.payload.data;
+        state.topHalls = Array.isArray(action.payload?.data) ? action.payload.data : [];
+      })
+      .addCase(fetchTopHalls.rejected, (state) => {
+        state.topHalls = [];
       });
   },
 });

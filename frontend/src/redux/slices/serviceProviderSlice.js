@@ -34,14 +34,18 @@ const serviceProviderSlice = createSlice({
       })
       .addCase(fetchServiceProviders.fulfilled, (state, action) => {
         state.loading = false;
-        state.serviceProviders = action.payload.data || [];
+        state.serviceProviders = Array.isArray(action.payload?.data) ? action.payload.data : [];
       })
       .addCase(fetchServiceProviders.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message;
+        state.error = action.error?.message || 'Failed to fetch service providers';
+        state.serviceProviders = [];
       })
       .addCase(fetchServiceProvidersByCategory.fulfilled, (state, action) => {
-        state.serviceProviders = action.payload.data || [];
+        state.serviceProviders = Array.isArray(action.payload?.data) ? action.payload.data : [];
+      })
+      .addCase(fetchServiceProvidersByCategory.rejected, (state) => {
+        state.serviceProviders = [];
       });
   },
 });

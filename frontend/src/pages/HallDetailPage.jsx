@@ -71,7 +71,7 @@ const HallDetailPage = () => {
     <div className="min-h-screen bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 py-8">
         {/* Image Gallery */}
-        {currentHall.photos && currentHall.photos.length > 0 && (
+        {Array.isArray(currentHall.photos) && currentHall.photos.length > 0 && (
           <div className="bg-white rounded-2xl shadow-xl overflow-hidden mb-8">
             <div className="relative h-96 md:h-[500px]">
               <img
@@ -161,7 +161,7 @@ const HallDetailPage = () => {
               </div>
 
               {/* Event Types */}
-              {currentHall.eventTypes && currentHall.eventTypes.length > 0 && (
+              {Array.isArray(currentHall.eventTypes) && currentHall.eventTypes.length > 0 && (
                 <div className="mb-8">
                   <h2 className="text-2xl font-bold mb-4 text-gray-800">Event Types</h2>
                   <div className="flex flex-wrap gap-2">
@@ -178,7 +178,7 @@ const HallDetailPage = () => {
               )}
 
               {/* Amenities */}
-              {currentHall.amenities && currentHall.amenities.length > 0 && (
+              {Array.isArray(currentHall.amenities) && currentHall.amenities.length > 0 && (
                 <div className="mb-8">
                   <h2 className="text-2xl font-bold mb-4 text-gray-800">Amenities</h2>
                   <div className="grid md:grid-cols-2 gap-3">

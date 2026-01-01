@@ -27,10 +27,11 @@ const ManageServiceProviders = () => {
         ...(status !== 'all' && { status }),
       });
       const response = await api.get(`/admin/service-providers?${queryParams}`);
-      setServiceProviders(response.data.data || []);
-      setTotalPages(response.data.pagination?.totalPages || 1);
+      setServiceProviders(Array.isArray(response.data?.data) ? response.data.data : []);
+      setTotalPages(response.data?.pagination?.totalPages || 1);
     } catch (error) {
       toast.error('Failed to load service providers');
+      setServiceProviders([]);
     } finally {
       setLoading(false);
     }
@@ -88,7 +89,7 @@ const ManageServiceProviders = () => {
         <div className="flex items-center justify-center h-64">
           <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-orange-500"></div>
         </div>
-      ) : filteredProviders.length === 0 ? (
+      ) : !Array.isArray(filteredProviders) || filteredProviders.length === 0 ? (
         <div className="bg-white rounded-xl shadow-md p-12 text-center">
           <p className="text-gray-500 text-lg">No service providers found</p>
         </div>

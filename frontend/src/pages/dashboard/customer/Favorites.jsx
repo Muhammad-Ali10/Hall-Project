@@ -18,6 +18,7 @@ const Favorites = () => {
       setFavorites([]);
     } catch (error) {
       toast.error('Failed to load favorites');
+      setFavorites([]);
     } finally {
       setLoading(false);
     }
@@ -35,7 +36,7 @@ const Favorites = () => {
     <div className="space-y-6">
       <h1 className="text-3xl font-bold text-gray-900">Favorite Halls</h1>
 
-      {favorites.length === 0 ? (
+      {!Array.isArray(favorites) || favorites.length === 0 ? (
         <div className="bg-white rounded-xl shadow-md p-12 text-center">
           <FiHeart className="mx-auto text-gray-400 mb-4" size={48} />
           <p className="text-gray-500 text-lg mb-4">No favorite halls yet</p>
@@ -54,7 +55,7 @@ const Favorites = () => {
               to={`/halls/${hall._id}`}
               className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow"
             >
-              {hall.photos?.[0] && (
+              {Array.isArray(hall.photos) && hall.photos.length > 0 && hall.photos[0]?.url && (
                 <img src={hall.photos[0].url} alt={hall.name} className="w-full h-48 object-cover" />
               )}
               <div className="p-4">

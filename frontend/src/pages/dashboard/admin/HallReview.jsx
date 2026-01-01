@@ -168,7 +168,7 @@ const HallReview = () => {
           </div>
 
           {/* Amenities */}
-          {hall.amenities && hall.amenities.length > 0 && (
+          {Array.isArray(hall.amenities) && hall.amenities.length > 0 && (
             <div className="bg-white rounded-xl shadow-md p-6">
               <h3 className="text-lg font-semibold text-gray-900 mb-4">Amenities</h3>
               <div className="flex flex-wrap gap-2">
@@ -185,14 +185,14 @@ const HallReview = () => {
           )}
 
           {/* Gallery */}
-          {hall.photos && hall.photos.length > 0 && (
+          {Array.isArray(hall.photos) && hall.photos.length > 0 && (
             <div className="bg-white rounded-xl shadow-md p-6">
               <h3 className="text-lg font-semibold text-gray-900 mb-4">Photos ({hall.photos.length})</h3>
               <div className="grid grid-cols-3 gap-4">
                 {hall.photos.slice(0, 6).map((photo, index) => (
                   <img
                     key={index}
-                    src={photo.url}
+                    src={photo?.url}
                     alt={`Hall ${index + 1}`}
                     className="w-full h-32 object-cover rounded-lg"
                   />
@@ -202,7 +202,7 @@ const HallReview = () => {
           )}
 
           {/* Videos */}
-          {hall.videos && hall.videos.length > 0 && (
+          {Array.isArray(hall.videos) && hall.videos.length > 0 && (
             <div className="bg-white rounded-xl shadow-md p-6">
               <h3 className="text-lg font-semibold text-gray-900 mb-4">Videos ({hall.videos.length})</h3>
               <div className="grid grid-cols-2 gap-4">
@@ -226,15 +226,21 @@ const HallReview = () => {
                 Location
               </h3>
               <div className="h-64 rounded-lg overflow-hidden">
-                <LoadScript googleMapsApiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}>
-                  <GoogleMap
-                    center={mapCenter}
-                    zoom={15}
-                    mapContainerStyle={{ width: '100%', height: '100%' }}
-                  >
-                    <Marker position={mapCenter} />
-                  </GoogleMap>
-                </LoadScript>
+                {import.meta.env.VITE_GOOGLE_MAPS_API_KEY ? (
+                  <LoadScript googleMapsApiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}>
+                    <GoogleMap
+                      center={mapCenter}
+                      zoom={15}
+                      mapContainerStyle={{ width: '100%', height: '100%' }}
+                    >
+                      <Marker position={mapCenter} />
+                    </GoogleMap>
+                  </LoadScript>
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center bg-gray-100">
+                    <p className="text-gray-500 text-sm">Map unavailable</p>
+                  </div>
+                )}
               </div>
             </div>
           )}

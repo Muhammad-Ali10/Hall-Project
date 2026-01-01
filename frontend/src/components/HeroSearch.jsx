@@ -36,37 +36,56 @@ const HeroSearch = () => {
     // DO NOT get location automatically - only when user clicks
 
     // Initialize Google Places Autocomplete
-    if (window.google && window.google.maps) {
+    if (window.google && window.google.maps && window.google.maps.places) {
       const input = document.getElementById('search-input');
       if (input) {
-        const autocomplete = new window.google.maps.places.Autocomplete(input, {
-          types: ['(cities)'],
-        });
-        autocomplete.addListener('place_changed', () => {
-          const place = autocomplete.getPlace();
-          if (place && place.geometry) {
-            const location = {
-              lat: place.geometry.location.lat(),
-              lng: place.geometry.location.lng(),
-            };
-            setUserLocation(location);
-            setSearchQuery(place.formatted_address);
-          }
-        });
-        autocompleteRef.current = autocomplete;
+        try {
+          const autocomplete = new window.google.maps.places.Autocomplete(input, {
+            types: ['(cities)'],
+          });
+          autocomplete.addListener('place_changed', () => {
+            const place = autocomplete.getPlace();
+            if (place && place.geometry && place.geometry.location) {
+              const location = {
+                lat: place.geometry.location.lat(),
+                lng: place.geometry.location.lng(),
+              };
+              setUserLocation(location);
+              setSearchQuery(place.formatted_address || '');
+            }
+          });
+          autocompleteRef.current = autocomplete;
+        } catch (error) {
+          console.error('Error initializing Google Places Autocomplete:', error);
+        }
       }
     }
   }, []);
 
   // Load Google Maps script
   useEffect(() => {
-    if (!window.google) {
-      const script = document.createElement('script');
-      script.src = `https://maps.googleapis.com/maps/api/js?key=${import.meta.env.VITE_GOOGLE_MAPS_API_KEY}&libraries=places`;
-      script.async = true;
-      script.defer = true;
-      document.head.appendChild(script);
+    const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
+    
+    // Don't load if no API key
+    if (!apiKey) {
+      console.warn('Google Maps API key is not configured');
+      return;
     }
+
+    // Check if already loaded
+    if (window.google && window.google.maps && window.google.maps.places) {
+      return;
+    }
+
+    // Load Google Maps script
+    const script = document.createElement('script');
+    script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=places`;
+    script.async = true;
+    script.defer = true;
+    script.onerror = () => {
+      console.error('Failed to load Google Maps API');
+    };
+    document.head.appendChild(script);
   }, []);
 
   const handleSearch = (e) => {
